@@ -1,11 +1,12 @@
 version: "2"
 
 syncs:
-  docker-sync3:
-    src: './'
+  docker-sync7:
+    src: './src'
+    sync_userid: '1000'
+    sync_excludes: ['.gitignore', '.git/', '.idea/','docker4drupal/','laradocker/','ubDocker']
+
+  docker-sync-mysql:
+    src: '/Users/rohandsouza/Dev_area/mysql_data/'
     sync_userid: '1000'
     sync_excludes: ['.gitignore', '.git/', '.idea/']
-#  docker-sync-another-project:
-#    src: '/absolute/path/to/project/codebase'
-#    sync_userid: '1000'
-#    sync_excludes: ['.gitignore', '.git/', '.idea/']

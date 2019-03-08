@@ -1,40 +1,30 @@
-FROM php:7.1-fpm
-RUN echo "running package install on php..."
-
-RUN apt-get update && apt-get upgrade && apt-get install freetype-config libmcrypt-dev libedit-dev libxml2
-RUN apt-get install libjpeg-dev
-RUN apt-get install libpng-dev
-#openssl
-#libssl-dev
-RUN apt-get install mysql-client
 
 
-#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-#RUN docker-php-ext-install -j$(nproc) gd
-#RUN docker-php-ext-install mbstring
-#RUN docker-php-ext-install mysqli
-#RUN docker-php-ext-install pdo
-#RUN docker-php-ext-install xml
-#RUN docker-php-ext-install pdo_mysql
-#RUN docker-php-ext-install json
-#RUN docker-php-ext-install zip
-#RUN docker-php-ext-install soap
-#RUN docker-php-ext-install readline
-#docker-php-ext-install phar openssl zlib
+#==============httpd=================
+FROM bitnami/apache:latest
+RUN echo "running package install on bitnami/apache:latest..."
 
-#Todo: add curl ssh2 gnupg
+USER root
+RUN apt-get update && apt-get -y upgrade
+#RUN apt-get install libapache2-mod-php7.1 -y
+RUN apt-get install libapache-*
 
-#Todo: add composer & drush support
+RUN rm -fr /
 
-RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
-#chmod -R a+w /usr/share/nginx/html/app/sites/default/files
-#composer global require drush/drush:8.x
-#ln -s /root/.composer/vendor/drush/drush/drush /usr/bin/drush
+# Enable apache mods.
+RUN a2enmod php7.1
+RUN a2enmod rewrite
 
+# Update the PHP.ini file, enable <? ?> tags and quieten logging.
+RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/apache2/php.ini
+RUN sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php/7.0/apache2/php.ini
 
-FROM nginx:stable
-RUN echo "running nginx setup..."
+# Manually set up the apache environment variables
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
 
-#RUN mkdir /etc/ssl/ubdocker.localhost/
-#RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./config/ssl/selfsigned.key -out ./config/ssl/selfsigned.crt
-#RUN openssl dhparam -out ./config/ssl/dhparam.pem
+# Expose apache.
+EXPOSE 80
