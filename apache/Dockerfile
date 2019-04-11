@@ -1,4 +1,4 @@
-ARG APACHE_VERSION=""
+ARG APACHE_VERSION="stable"
 FROM httpd:${APACHE_VERSION:+${APACHE_VERSION}}
 
 RUN apt-get update
