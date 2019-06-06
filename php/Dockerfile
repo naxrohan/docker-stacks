@@ -1,4 +1,4 @@
-ARG PHP_VERSION="7.1"
+ARG PHP_VERSION="7.2"
 FROM php:${PHP_VERSION:+${PHP_VERSION}}
 
 RUN apt-get update
@@ -8,7 +8,7 @@ RUN apt-get install libedit-dev -y
 RUN apt-get install libxml2  -y
 RUN apt-get install libjpeg-dev -y
 RUN apt-get install libpng-dev -y
-RUN apt-get install mysql-client -y
+RUN apt-get install mariadb-client -y
 
 #RUN apt-get install libmcrypt-dev -y
 #RUN apt-get install openssl -y
@@ -29,3 +29,8 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 #RUN chmod -R a+w /usr/local/apache2/htdocs/drupal8demo/web/sites/default/files
 RUN composer global require drush/drush:8.x
 RUN ln -s /root/.composer/vendor/drush/drush/drush /usr/bin/drush
+
+#todo : RUN ./scripts/stacks.py
+#todo : add php configurable here...
+#docker cp docker-stack_php:/usr/local/etc/php/php.ini php.ini
+#todo : COPY  "php.ini" "$PHP_INI_DIR/php.ini"

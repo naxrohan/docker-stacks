@@ -1,1 +1,5 @@
 /src/site/nbproject/private/
+.idea/*
+/src/site/*
+/src/cm_site/nbproject/private/
+/src/cm_site/*
