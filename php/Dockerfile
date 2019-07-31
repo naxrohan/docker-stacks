@@ -30,7 +30,7 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 RUN composer global require drush/drush:8.x
 RUN ln -s /root/.composer/vendor/drush/drush/drush /usr/bin/drush
 
-#todo : RUN ./scripts/stacks.py
+
 #todo : add php configurable here...
 #docker cp docker-stack_php:/usr/local/etc/php/php.ini php.ini
 #todo : COPY  "php.ini" "$PHP_INI_DIR/php.ini"

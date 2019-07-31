@@ -47,27 +47,24 @@ services:
     image: mysql:$MYSQLDB_TAG
     container_name: "${PROJECT_NAME}_mysqldb"
     stop_grace_period: 30s
-    # external_links:
-        # - mysql_mysql_1:docker-mysql
     networks:
       - backend
     ports:
       - "3306:3306"
     environment:
-      # DB_HOST: docker-mysql
       MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
       MYSQL_DATABASE: $DB_NAME
       MYSQL_USER: $DB_USER
       MYSQL_PASSWORD: $DB_PASSWORD
     volumes:
         - ./db/:/home/
+#        - docker-sync-mysql: /var/lib/mysql/
 
   traefik:
     image: traefik
     container_name: "${PROJECT_NAME}_traefik"
     command: -c /dev/null --web --docker --logLevel=INFO
     ports:
-      #- "80:80"     # The HTTP port
       - "8080:8080" # The Web UI (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
