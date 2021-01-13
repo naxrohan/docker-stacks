@@ -28,3 +28,6 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 
 # Expose apache.
 EXPOSE 80
+EXPOSE 443
+
+#https://stackoverflow.com/questions/5441972/how-to-see-log-files-in-mysql
