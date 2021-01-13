@@ -29,23 +29,26 @@ services:
     container_name: "${PROJECT_NAME}_httpd"
     depends_on:
         - php
-        - mysqld
+        - mysqldb
     networks:
       - frontend
       - backend
     ports:
+      - '443:443'
       - '80:80'
-      # - '443:8443'
+
     volumes:
         - ./../:/usr/local/apache2/htdocs
-    labels:
-      - 'traefik.backend=httpd'
-      - 'traefik.port=80'
-      - "traefik.frontend.rule=Host:${PROJECT_BASE_URL}"
+        - ./apache/ssl/:/etc/apache2/ssl/
+        # - ./apache/ssl/:/usr/local/apache2/conf/
+    # labels:
+    #   - 'traefik.backend=httpd'
+    #   - 'traefik.port=80'
+    #   - "traefik.frontend.rule=Host:${PROJECT_BASE_URL}"
 
-  mysqld:
+  mysqldb:
     image: mysql:$MYSQLDB_TAG
-    container_name: "${PROJECT_NAME}_mysqldb"
+    container_name: "${PROJECT_NAME}_mysqldb2"
     stop_grace_period: 30s
     networks:
       - backend
@@ -56,25 +59,53 @@ services:
       MYSQL_DATABASE: $DB_NAME
       MYSQL_USER: $DB_USER
       MYSQL_PASSWORD: $DB_PASSWORD
+      DB_HOST: mysqldb
+    external_links:
+        - mysql_mysql_1:mysqldb
     volumes:
         - ./db/:/home/
-#        - docker-sync-mysql: /var/lib/mysql/
+        - ./db/datadir:/var/lib/mysql
+        - ./db/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
 
-  traefik:
-    image: traefik
-    container_name: "${PROJECT_NAME}_traefik"
-    command: -c /dev/null --web --docker --logLevel=INFO
-    ports:
-      - "8080:8080" # The Web UI (enabled by --api)
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  # traefik:
+  #   image: traefik
+  #   container_name: "${PROJECT_NAME}_traefik"
+  #   command: -c /dev/null --web --docker --docker.domain=${PROJECT_BASE_URL} --logLevel=DEBUG
+  #   ports:
+  #     - 8080:8080 # The Web UI (enabled by --api)
+  #     # - 443:443
+  #     # - 80:80
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./traefik.toml:/traefik.toml
+  #     - ./apache/ssl/:/certs/
+
+
+  # elastic-search:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.8.11
+  #   container_name: elastic-search
+  #   environment:
+  #     - bootstrap.memory_lock=true
+  #     - discovery.type=single-node
+  #     - network.bind_host=0.0.0.0
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - ./db/es/:/usr/share/elasticsearch/data
+  #   ports:
+  #     - 9200:9200
+  #   expose:
+  #     - 9200
+
 
 networks:
   frontend:
   backend:
-volumes:
+#volumes:
 ## Uncomment for macOS
-  docker-sync7:
-    external: true
-  docker-sync-mysql:
-    external: true
+#  docker-sync7:
+#    external: true
+#  docker-sync-mysql:
+#    external: true
