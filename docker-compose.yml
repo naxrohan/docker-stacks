@@ -18,8 +18,10 @@ services:
       DB_NAME: $DB_NAME
       DB_DRIVER: $DB_DRIVER
     volumes:
-        - ./../:/usr/local/apache2/htdocs/
+        - ./../:/usr/local/apache2/htdocs/ #
         - ./php/php.ini:/usr/local/etc/php/php.ini
+        - ./node/node-v14.11.0-linux-x64/:/opt/node
+        - /Users/rohandsouza/repo_directory/:/home/
 
   httpd:
     build:
@@ -52,6 +54,7 @@ services:
     stop_grace_period: 30s
     networks:
       - backend
+      - frontend
     ports:
       - "3306:3306"
     environment:
