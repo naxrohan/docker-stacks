@@ -1,4 +1,4 @@
-ARG PHP_VERSION="7.2"
+ARG PHP_VERSION="7.4"
 FROM php:${PHP_VERSION:+${PHP_VERSION}}
 
 RUN apt-get update
@@ -55,7 +55,8 @@ RUN docker-php-ext-install json
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 #RUN chmod -R a+w /usr/local/apache2/htdocs/drupal8demo/web/sites/default/files
 RUN composer global require drush/drush:8.x
-RUN ln -s /root/.composer/vendor/drush/drush/drush /usr/bin/drush
+# RUN ln -s /root/.composer/vendor/drush/drush/drush /usr/bin/drush
+RUN ln -s /root/.config/composer/vendor/drush/drush/drush /usr/bin/drush
 
 # https://packagist.com/
 
@@ -82,5 +83,6 @@ RUN echo $PATH
 # RUN npm -v
 
 RUN apt-get install -y libpng-dev libfreetype6-dev libjpeg62-turbo-dev
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+# RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure gd
 RUN docker-php-ext-install -j$(nproc) gd

@@ -18,7 +18,7 @@ services:
       DB_NAME: $DB_NAME
       DB_DRIVER: $DB_DRIVER
     volumes:
-        - ./../:/usr/local/apache2/htdocs/ #
+        - ./../../www/:/usr/local/apache2/htdocs/ #
         - ./php/php.ini:/usr/local/etc/php/php.ini
         - ./node/node-v14.11.0-linux-x64/:/opt/node
         - /Users/rohandsouza/repo_directory/:/home/
@@ -40,7 +40,7 @@ services:
       - '80:80'
 
     volumes:
-        - ./../:/usr/local/apache2/htdocs
+        - ./../../www/:/usr/local/apache2/htdocs
         - ./apache/ssl/:/etc/apache2/ssl/
         # - ./apache/ssl/:/usr/local/apache2/conf/
     # labels:
@@ -69,6 +69,13 @@ services:
         - ./db/:/home/
         - ./db/datadir:/var/lib/mysql
         - ./db/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+
+  # python:
+  #   build:
+  #     context: './python/'
+  #   image: python:3
+  #   container_name: "${PROJECT_NAME}_python"
+
 
   # traefik:
   #   image: traefik
